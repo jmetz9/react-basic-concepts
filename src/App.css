@@ -36,3 +36,29 @@
     transform: rotate(360deg);
   }
 }
+
+.New-country {
+  cursor: pointer;
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  z-index: 100;
+}
+
+.New-country .Toggle-form {
+  font-size: 2em;
+  cursor: pointer;
+}
+
+.New-country button {
+  height: 32px;
+}
+
+.New-country input {
+  height: 26px;
+}
+
+.New-country button, input {
+  border-radius: 4px;
+  margin-left: 5px;
+}
