@@ -1,49 +1,76 @@
-import React, {Component} from 'react';
-import './App.css';
+// Repository:  medals-b-react
+// Author:      Jeff Grissom
+// Version:     5.xx
+import React, { useState, useEffect, useRef } from 'react';
 import Country from './components/Country';
-import NewCountry from './components/NewCountry'
+import NewCountry from './components/NewCountry';
+import './App.css';
 
-class App extends Component {
-  state = {
-    countries: [
-      { id: 1, country: 'United States', goldMedalCount: 2 },
-      { id: 2, country: 'China', goldMedalCount: 3 },
-      { id: 3, country: 'Germany', goldMedalCount: 0 },
+const App = () => {
+  const [ countries, setCountries ] = useState([]);
+  const medals = useRef([
+    { id: 1, name: 'gold' },
+    { id: 2, name: 'silver' },
+    { id: 3, name: 'bronze' },
+  ]);
+
+  // this is the functional equivalent to componentDidMount
+  useEffect(() => {
+    // initial data loaded here
+    let fetchedCountries = [
+      { id: 1, name: 'United States', gold: 2, silver: 2, bronze: 3 },
+      { id: 2, name: 'China', gold: 3, silver: 1, bronze: 0 },
+      { id: 3, name: 'Germany', gold: 0, silver: 2, bronze: 2 },
     ]
-  }
-  handleIncrement = (countryId) => {
-    const country = this.state.countries.find(c => c.id === countryId);
-    this.setState({goldMedalCount: country.goldMedalCount += 1});
-  }
-  handleReduction = (countryId) => {
-    const country = this.state.countries.find(c => c.id === countryId);
-    this.setState({goldMedalCount: country.goldMedalCount > 0 ? country.goldMedalCount -= 1 : 0})
-  }
-  handleAdd = (country, gold) => {
-    const { countries } = this.state;
-    const id = countries.length === 0 ? 1 : Math.max(...countries.map(country => country.id)) + 1;
-    const mutableCountries = countries.concat({ id: id, country: country, goldMedalCount: gold });
-    this.setState({ countries:mutableCountries });
-  }
-  handleDelete = (countryId) => {
-    const country = this.state.countries.filter(c => c.id !== countryId);
-    this.setState({countries:country})
-  }  
-  render() {
-    return (
-      <div className="App">
-        { this.state.countries.map( country =>
-          <Country
-          key = {country.id}
-          country = {country}
-          onIncrement = {this.handleIncrement}
-          onReduction = {this.handleReduction}
-          onDelete = {this.handleDelete}
-        />)}
-        <NewCountry onAdd={this.handleAdd}/>
-      </div>
-    );
-  }
-}
+    setCountries(fetchedCountries);
+  }, []);
 
+  const handleAdd = (name) => {
+    const id = countries.length === 0 ? 1 : Math.max(...countries.map(country => country.id)) + 1;
+    setCountries([...countries].concat({ id: id, name: name, gold: 0, silver: 0, bronze: 0 }));
+  }
+  const handleDelete = (countryId) => {
+    setCountries([...countries].filter(c => c.id !== countryId));
+  }
+  const handleIncrement = (countryId, medalName) => {
+    const idx = countries.findIndex(c => c.id === countryId);
+    const mutableCountries = [...countries ];
+    mutableCountries[idx][medalName] += 1;
+    setCountries(mutableCountries);
+  }
+  const handleDecrement = (countryId, medalName) => {
+    const idx = countries.findIndex(c => c.id === countryId);
+    const mutableCountries = [...countries ];
+    mutableCountries[idx][medalName] -= 1;
+    setCountries(mutableCountries);
+  }
+  const getAllMedalsTotal = () => {
+    let sum = 0;
+    medals.current.forEach(medal => { sum += countries.reduce((a, b) => a + b[medal.name], 0); });
+    return sum;
+  }
+  return (
+    <React.Fragment>
+      <div className='appHeading'>
+        Olympic Medals
+        <span className='badge'>
+          { getAllMedalsTotal() }
+        </span>
+      </div>
+      <div className='countries'>
+          { countries.map(country => 
+            <Country 
+              key={ country.id } 
+              country={ country } 
+              medals={ medals.current }
+              onDelete={ handleDelete }
+              onIncrement={ handleIncrement } 
+              onDecrement={ handleDecrement } />
+          )}
+      </div>
+      <NewCountry onAdd={ handleAdd } />
+    </React.Fragment>
+  );
+}
+ 
 export default App;
