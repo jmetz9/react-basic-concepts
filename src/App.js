@@ -10,9 +10,9 @@ import './App.css';
 
 const App = () => {
   // const apiEndpoint = "https://localhost:5001/api/country";
-  const apiEndpoint = "https://localhost:5001/jwt/api/country";
-  const hubEndpoint = "https://localhost:5001/medalsHub"
-  const usersEndpoint = "https://localhost:5001/api/users/login";
+  const apiEndpoint = "https://medals-api-jbm.azurewebsites.net/jwt/api/country";
+  const hubEndpoint = "https://medals-api-jbm.azurewebsites.net/medalsHub"
+  const usersEndpoint = "https://jwtswagger-jbm.azurewebsites.net/api/users/login";
   // const apiEndpoint = "https://medalsapi.azurewebsites.net/api/country";
   // const apiEndpoint = "https://medalsapi.azurewebsites.net/jwt/api/country";
   // const hubEndpoint = "https://medalsapi.azurewebsites.net/medalsHub"
